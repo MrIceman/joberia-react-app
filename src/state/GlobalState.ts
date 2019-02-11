@@ -53,11 +53,12 @@ export enum ActionFlags {
     LOGIN_FAILED = 'login_failed',
     LOGOUT = 'logout',
     SIGNUP = 'signup',
+    DEBUG = 'debug'
 }
 
 //type ActionFlags = 'job' | 'job_list' | 'user' | 'user_list' | 'login' | 'logout' | 'job_created' | 'signup';
 
-export type Action = ActionFlags | Array<ActionFlags>;
+export type Action = Array<ActionFlags>
 
 export interface AppState {
     isLoggedIn: boolean,
@@ -65,6 +66,7 @@ export interface AppState {
     newestJobs: Array<Job>,
     users: Array<User>,
     newestUsers: Array<User>,
+    debugMessage: string
 }
 
 export interface MetaState {
@@ -73,12 +75,12 @@ export interface MetaState {
     platformId: number
 }
 
-type GlobalState = MetaState & AppState;
+export type GlobalState = MetaState & AppState;
 
 export interface StoreListener<T extends Partial<GlobalState>> {
-    update(state: T): void;
+    update(state: Partial<GlobalState>): void;
 
-    getAction(): Action;
+    getAction(): Array<ActionFlags>;
 }
 
 export class GlobalStore {
@@ -90,44 +92,68 @@ export class GlobalStore {
         jobs: [],
         users: [],
         newestJobs: [],
-        newestUsers: []
+        newestUsers: [],
+        debugMessage: ''
     };
-    private listeners: Map<Action, Array<StoreListener<Partial<GlobalState>>>> = new Map<Action, Array<StoreListener<Partial<GlobalState>>>>();
+    private listeners: Map<ActionFlags, Array<StoreListener<Partial<GlobalState>>>> = new Map<ActionFlags, Array<StoreListener<Partial<GlobalState>>>>();
 
     private static instance: GlobalStore;
 
     private constructor() {
+        //      this.listen = this.listen.bind(this);
+        this.unlisten = this.unlisten.bind(this);
+        this.update = this.update.bind(this);
     }
 
-    public static Store(): GlobalStore {
+    public static get(): GlobalStore {
         if (this.instance == null)
             this.instance = new GlobalStore();
         return this.instance;
     }
 
 
-    public listen(storeListener: StoreListener<any>) {
-        let action = storeListener.getAction();
-        let listeners = this.listeners.get(action);
+    private subscribeListener(listenerAction: ActionFlags, storeListener: StoreListener<any>) {
+        let listeners = this.listeners.get(listenerAction);
         if (listeners != null) {
+            console.log('listeners is not null');
             if (listeners.indexOf(storeListener) == -1)
                 listeners.push(storeListener)
-        } else
+        } else {
+            console.log('lisnter is null');
             listeners = [storeListener];
-        this.listeners.set(action, listeners);
+            console.log(listeners);
+        }
+        this.listeners.set(listenerAction, listeners);
     }
 
-    public unlisten(storeListener: StoreListener<any>) {
-        let action = storeListener.getAction();
-        let listeners = this.listeners.get(action);
+    private unsubscribeListener(listenerAction: ActionFlags, storeListener: StoreListener<any>) {
+        let listeners = this.listeners.get(listenerAction);
         if (listeners != null) {
             if (listeners.indexOf(storeListener) != -1)
                 listeners.splice(listeners.indexOf(storeListener), 1);
-            this.listeners.set(action, listeners);
+            this.listeners.set(listenerAction, listeners);
         }
     }
 
-    public update(partial: Partial<GlobalState>, action: Action) {
+    public listen(storeListener: StoreListener<any>) {
+        let listenerAction: Array<ActionFlags> = [];
+        listenerAction.push(...storeListener.getAction());
+        for (let a of listenerAction)
+            this.subscribeListener(a, storeListener);
+
+        console.log('listening: ' + JSON.stringify(this.listeners) + " / " + JSON.stringify(listenerAction));
+
+    }
+
+    public unlisten(storeListener: StoreListener<any>) {
+        let listenerAction: Array<ActionFlags> = [];
+        listenerAction.push(...storeListener.getAction());
+        for (let a of listenerAction)
+            this.unsubscribeListener(a, storeListener);
+    }
+
+    public update(partial: Partial<GlobalState>, action: ActionFlags) {
+        console.log('Update!');
         this.state = {...this.state, ...partial};
 
         if (this.listeners.get(action) != undefined) {
