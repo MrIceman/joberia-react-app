@@ -77,12 +77,6 @@ export interface MetaState {
 
 export type GlobalState = MetaState & AppState;
 
-export interface StoreListener<T extends Partial<GlobalState>> {
-    update(state: Partial<GlobalState>): void;
-
-    getAction(): Array<ActionFlags>;
-}
-
 export class GlobalStore {
     private state: GlobalState = {
         jwtToken: '',
@@ -115,11 +109,9 @@ export class GlobalStore {
     private subscribeListener(listenerAction: ActionFlags, storeListener: StoreListener<any>) {
         let listeners = this.listeners.get(listenerAction);
         if (listeners != null) {
-            console.log('listeners is not null');
             if (listeners.indexOf(storeListener) == -1)
                 listeners.push(storeListener)
         } else {
-            console.log('lisnter is null');
             listeners = [storeListener];
             console.log(listeners);
         }
@@ -140,9 +132,6 @@ export class GlobalStore {
         listenerAction.push(...storeListener.getAction());
         for (let a of listenerAction)
             this.subscribeListener(a, storeListener);
-
-        console.log('listening: ' + JSON.stringify(this.listeners) + " / " + JSON.stringify(listenerAction));
-
     }
 
     public unlisten(storeListener: StoreListener<any>) {
@@ -153,7 +142,6 @@ export class GlobalStore {
     }
 
     public update(partial: Partial<GlobalState>, action: ActionFlags) {
-        console.log('Update!');
         this.state = {...this.state, ...partial};
 
         if (this.listeners.get(action) != undefined) {
@@ -163,5 +151,10 @@ export class GlobalStore {
             }
         }
     }
+}
 
+export interface StoreListener<T extends Partial<GlobalState>> {
+    update(state: Partial<GlobalState>): void;
+
+    getAction(): Array<ActionFlags>;
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Action, ActionFlags, GlobalState, GlobalStore, Job, StoreListener, User} from "../state/GlobalState";
+import {Action, ActionFlags, GlobalState, GlobalStore, Job, StoreListener, User} from "../../state/GlobalState";
 import Button from "semantic-ui-react/dist/commonjs/elements/Button/Button";
 
 type state = {
