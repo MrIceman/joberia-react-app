@@ -70,8 +70,24 @@ export class GatewayImpl implements Gateway {
         return undefined;
     }
 
-    signUp(): Promise<User> {
-        return undefined;
+    signUp(username, email, role, first_name, last_name, platform, password): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            let endpoint = 'user/register/';
+            let data = {
+                username,
+                email,
+                role,
+                first_name,
+                last_name,
+                platform,
+                password
+            };
+
+            this.httpService.makeUnsignedRequest(JSON.stringify(data), endpoint).then((result) => {
+                let token = result.body as string;
+                resolve(token);
+            }).catch((error) => reject(error));
+        });
     }
 
 }

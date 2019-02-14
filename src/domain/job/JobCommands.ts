@@ -1,6 +1,6 @@
 import {StoreCommand} from "../../state/Command";
 import {GatewayImpl} from "../../data/GatewayImpl";
-import {Job} from "../../entity/Entities";
+import {ActionFlags} from "../../state/GlobalState";
 
 export class JobCommands extends StoreCommand {
 
@@ -10,7 +10,9 @@ export class JobCommands extends StoreCommand {
         super();
     }
 
-    getAllJobs(): Promise<Array<Job>> {
-        return this.gateway.getAllJobs();
+    getAllJobs(): void {
+        this.gateway.getAllJobs().then((result) => {
+            this.update({jobs: result}, ActionFlags.JOB_LIST);
+        });
     }
 }

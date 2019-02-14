@@ -2,7 +2,7 @@ import {Job, User} from "../entity/Entities";
 
 export interface Gateway {
 
-    signUp(): Promise<User>;
+    signUp(username, email, role, firstName, lastName, platform, password): Promise<string>
 
     signIn(): Promise<User>;
 
