@@ -1,47 +1,4 @@
-/*
-user:
-
-    ROLES = (('dev', 'Developer'), ('org', 'Organization'))
-    role = models.CharField(choices=ROLES, max_length=3)
-    confirmed = models.BooleanField(default=False)
-    disabled = models.BooleanField(default=False)
-    confirm_hash = models.CharField(max_length=160, default='')
-    organization = models.ForeignKey(Organization, null=True, related_name='users', on_delete=models.DO_NOTHING)
-    platform = models.ForeignKey(Platform, null=False, related_name='users', on_delete=models.DO_NOTHING)
- */
-
-
-type UserRole = 'dev' | 'org';
-
-export interface User {
-    role: UserRole,
-    firstName: string,
-    lastName: string,
-    email: string,
-    profilePhoto?: string,
-    disabled?: boolean,
-    confirmed?: boolean
-}
-
-export interface Comment {
-    author: User,
-    text: string,
-    jobId: number,
-    id: number
-}
-
-export interface Job {
-    id: number,
-    title: string,
-    description: string,
-    short_description: string,
-    desired_profile: Array<string>,
-    offers: Array<string>,
-    bonuses: Array<string>,
-    location: Array<string>,
-    skills: Array<string>
-    created_by: User,
-}
+import {Job, User} from "../entity/Entities";
 
 export enum ActionFlags {
     JOB = 'job',
