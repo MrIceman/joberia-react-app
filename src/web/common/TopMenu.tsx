@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Button, Container, Header, Icon, Image, Menu, Segment, SemanticICONS} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 export class TopMenu extends React.Component {
     render() {
@@ -10,9 +11,9 @@ export class TopMenu extends React.Component {
                      size={"huge"}>
             <Container>
                 <Menu.Item as='p'>
-                 joberia<span style={{color: '#FFD700'}}>.ai</span>
+                    joberia<span style={{color: '#FFD700'}}>.ai</span>
                 </Menu.Item>
-                <Menu.Item as='a' active={true}>Home</Menu.Item>
+                <Menu.Item as={Link} active={true} to={'/'}>Home</Menu.Item>
                 <Menu.Item as='a'>Jobs</Menu.Item>
                 <Menu.Item as='a'>Experts</Menu.Item>
             </Container>

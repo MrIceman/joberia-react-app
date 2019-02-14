@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Container, Grid, Header, List, Segment} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 export class FooterHero extends React.Component{
 
@@ -21,6 +22,7 @@ export class FooterHero extends React.Component{
                                 <List.Item as='a'>Job Alert</List.Item>
                                 <List.Item as='a'>Post Job</List.Item>
                                 <List.Item as='a'>Download App</List.Item>
+                                <List.Item as={Link} to={'/register'}>Create Account</List.Item>
                             </List>
                         </Grid.Column>
                         <Grid.Column width={7}>

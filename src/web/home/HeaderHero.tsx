@@ -32,6 +32,7 @@ export class HeaderHero extends React.Component<props> {
                     marginTop: this.props.mobile ? '0.5em' : '1.5em',
                 }}
             />
+
             <Segment inverted={true}>
                 <Button size='huge' color="yellow" inverted={true}>
                     See Jobs

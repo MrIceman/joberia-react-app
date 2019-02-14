@@ -1,9 +1,11 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import './index.css'
-import {HomeView} from "./web/home/HomeView";
+import {BrowserRouter} from 'react-router-dom'
+import {App} from "./web/App";
+
 
 ReactDOM.render(
-    <HomeView/>,
+    <BrowserRouter><App/></BrowserRouter>,
     document.getElementById("root")
 );
